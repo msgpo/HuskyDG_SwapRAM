@@ -5,7 +5,7 @@ if [ -d "/system/xbin" ]; then
 else
     ui_print "- Chosen path: /system/bin"
     mkdir -p $MODPATH/system/bin
-    mv -rf $MODPATH/system/xbin/swapram $MODPATH/system/bin
+    mv -f $MODPATH/system/xbin/swapram $MODPATH/system/bin/swapram
     rm -rf $MODPATH/system/xbin
 fi
 if [ -f "$SECURE_DIR/swap" ]; then
