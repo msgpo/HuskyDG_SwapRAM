@@ -1,5 +1,5 @@
 #!/system/bin/sh
-MODDIR={0%/*}
+MODDIR=${0%/*}
 mod_prop(){ (
 NAME=$1; VARPROP=$2; FILE="$3"; [ ! "$FILE" ] && FILE="$MODID/swap.prop"; no=/dev/null
 if [ "$NAME" ] && [ ! "$NAME" == "=" ]; then
