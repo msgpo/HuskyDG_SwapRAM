@@ -32,3 +32,9 @@ Show status:
 ```
 su -c swapram status
 ```
+
+Change ZRAM size to 2048MB:
+
+```
+su -c swapram zram 2048M
+```
