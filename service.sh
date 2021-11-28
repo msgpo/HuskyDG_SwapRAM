@@ -34,3 +34,10 @@ if [ "$(grep_prop ENABLE_SWAP $MODDIR/swap.prop)" == "true" ]; then
 mkswap $MODDIR/swap
 swapon $MODDIR/swap
 fi
+if [ "$(grep_prop ZRAM_SWAP $MODDIR/swap.prop)" ]; then
+VALUE_SET="$(grep_prop ZRAM_SWAP $MODDIR/swap.prop)"
+sleep 10
+echo $VALUE_SET >/sys/block/zram0/disksize
+mkswap /dev/block/zram0
+swapon  /dev/block/zram0
+fi
