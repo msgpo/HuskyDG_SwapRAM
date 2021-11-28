@@ -1,0 +1,6 @@
+id=huskydg_swapram
+name=Magisk RAM Swapper
+version=v1.0
+versionCode=28
+author=HuskyDG
+description=Expand RAM memory by converting a part storage to swap RAM. Use "swapram" command on Terminal Emulator to edit swap RAM size
