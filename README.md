@@ -2,6 +2,9 @@
 ## About
 Expand RAM memory by converting a part of storage to Swap RAM
 
+## Requirements
+- Magisk 20.4+ is installed
+
 ## Installation
 It's Magisk module, flash it in **Magisk** app
 
