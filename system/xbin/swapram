@@ -74,8 +74,8 @@ mod_prop ENABLE_SWAP true
 echo "- Swap RAM has been enabled"
 }
 
-[ "$(id -u)" != "0" ] && abort "Permission denied: Run as root user only!\nPlease type \"su\" then \"swapram\""
 
+main(){
 MAGISKPATH=$(magisk --path) || abort "No Magisk found!"
 export PATH=$MAGISKPATH/.magisk/busybox:$MAGISKPATH
 case "$NAME" in
@@ -104,3 +104,9 @@ fi
  * )
 echo "Magisk Swap RAM by HuskyDG\nusage: swapram [NAME] [VALUE]\n\nNAME properties:\n  status            - Show Swap RAM status\n  add [VALUE]       - create and add Swap RAM with amount of GB\n  remove            - disable and remove Swap RAM file\n  zram [VALUE]      - create and add Swap RAM using ZRAM"
 esac
+
+}
+
+## if user is not "root", re exec with su magisk
+
+[ "$(id -u)" != "0" ] && exec su -m -c "$FILE" || main
