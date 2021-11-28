@@ -3,7 +3,7 @@
 Expand RAM memory by converting a part of storage to Swap RAM
 
 ## Installation
-It's Magisk module, flash it in **Magisk* app
+It's Magisk module, flash it in **Magisk** app
 
 ## Usage
 Show help in Terminal Emulator:
