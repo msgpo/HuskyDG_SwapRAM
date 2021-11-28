@@ -12,29 +12,29 @@ It's Magisk module, flash it in **Magisk** app
 Show help in Terminal Emulator:
 
 ```
-su -c swapram
+swapram
 ```
 
 Add Swap file and enable Swap RAM with 2GB size:
 
 ```
-su -c swapram add 2
+swapram add 2
 ```
 
 Disable Swap RAM:
 
 ```
-su -c swapram remove
+swapram remove
 ```
 
 Show status:
 
 ```
-su -c swapram status
+swapram status
 ```
 
 Change ZRAM size to 2048MB:
 
 ```
-su -c swapram zram 2048M
+swapram zram 2048M
 ```
