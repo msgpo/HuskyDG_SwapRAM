@@ -34,7 +34,29 @@ grep_prop() {
   cat $FILES 2>/dev/null | dos2unix | sed -n "$REGEX" | head -n 1
 }
 
-isnumber(){ ( expr "$1" + 0 &>/dev/null; ) }
+isnumber(){ (
+value=$1; 
+expr "$value" + 0 &>/dev/null; 
+) }
+
+is_size(){ (
+value=$1; lengthx=`expr ${#value} - 1`; lastchar=${value: -1}; valuex=${value: 0: $lengthx}
+# echo "$value  - ${#value} -  $lengthx  -  $lastchar  -  $valuex"
+( [ "$lastchar" == "G" -o "$lastchar" == "M" -o "$lastchar" == "k" ] && isnumber $valuex ) && return 0
+isnumber $value && return 0
+return 1
+) }
+
+zram_set(){ (
+VALUE_SET=$1
+[ -f "/sys/block/zram0/disksize" ] || abort "You kernel might not support ZRAM swap!"
+echo "- Set ZRAM size: $VALUE_SET"
+echo $VALUE_SET >/sys/block/zram0/disksize || abort "Cannot set ZRAM!"
+mkswap /dev/block/zram0 &>/dev/null
+swapon  /dev/block/zram0 || abort "Cannot create swap!"
+mod_prop ZRAM_SWAP "$VALUE_SET"
+echo "- Success!"
+) }
 
 
 swap_on(){
@@ -56,18 +78,29 @@ echo "- Swap RAM has been enabled"
 
 MAGISKPATH=$(magisk --path) || abort "No Magisk found!"
 export PATH=$MAGISKPATH/.magisk/busybox:$MAGISKPATH
-if [ "$NAME" = "add" ]; then
+case "$NAME" in
+ "add" )
 isnumber "$VALUE" && swap_on "$VALUE" 2>/dev/null || abort "Value must be a number!"
-elif [ "$NAME" == "remove" ]; then
+;;
+ "remove" )
 echo "- Disable swap if it is enabled..."
 swapoff $MODID/swap
 echo "- Remove swap file..."
 rm -rf $MODID/swap || abort "Cannot remove swap!"
 mod_prop ENABLE_SWAP false
 echo "- Swap RAM has been disabled"
-elif [ "$NAME" == "status" ]; then
-[ "$(grep_prop ENABLE_SWAP $MODID/swap.prop 2>/dev/null)" == "true" ] && echo "Magisk Swap RAM is actived with `du -shH $MODID/swap | awk '{ print $1 }'`" 2>/dev/null || echo "Magisk Swap RAM is disabled"
+;;
+ "zram" )
+if is_size "$VALUE"; then
+zram_set "$VALUE" 2>/dev/null
 else
-echo "Magisk Swap RAM by HuskyDG\nusage: swapram [NAME] [VALUE]\n\nNAME properties:\n  status                 - Show Swap RAM status\n  add [VALUE]            - create and add Swap RAM with size\n  remove                 - disable and remove Swap RAM file\n"
-
+abort "Invaild argument!\nIt must be like this: 1024M, 12000k, 2G, 2147483648"
 fi
+;;
+ "status" )
+[ "$(grep_prop ENABLE_SWAP $MODID/swap.prop 2>/dev/null)" == "true" ] && echo "Swap RAM add: `du -shH $MODID/swap | awk '{ print $1 }'`" 2>/dev/null || echo "Swap RAM add: 0"
+[ -f "/sys/block/zram0/disksize" ] && echo "ZRAM size: `cat /sys/block/zram0/disksize`" || echo "You kernel might not support ZRAM swap!"
+;;
+ * )
+echo "Magisk Swap RAM by HuskyDG\nusage: swapram [NAME] [VALUE]\n\nNAME properties:\n  status            - Show Swap RAM status\n  add [VALUE]       - create and add Swap RAM with amount of GB\n  remove            - disable and remove Swap RAM file\n  zram [VALUE]      - create and add Swap RAM using ZRAM"
+esac
