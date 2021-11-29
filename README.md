@@ -1,6 +1,5 @@
 # Magisk RAM Swapper
 
-**This repo has migrated to [Magisk Alternative Repo](https://github.com/Magisk-Modules-Alt-Repo/HuskyDG_SwapRAM)**   
 ## About
 Expand RAM memory by converting a part of storage to Swap RAM
 
